@@ -70,20 +70,18 @@ module SimpleCaptcha #:nodoc
 
         params = ImageHelpers.image_params(SimpleCaptcha.image_style).dup
         params << "-size #{SimpleCaptcha.image_size}"
-        params << "-wave #{amplitude}x#{frequency}"
         params << "-gravity Center"
         params << "-pointsize 22"
-        params << "-implode #{ImageHelpers.implode}"
-        unless SimpleCaptcha.font.empty?
-          params << "-font #{SimpleCaptcha.font}"
-        end
+        params << "-font #{SimpleCaptcha.font}" unless SimpleCaptcha.font.empty?
         params << "label:#{text}"
-        if SimpleCaptcha.noise and SimpleCaptcha.noise > 0
+        params << "-wave #{amplitude}x#{frequency}"
+        params << "-implode #{ImageHelpers.implode}"
+        if SimpleCaptcha.noise && SimpleCaptcha.noise > 0
           params << "-evaluate Uniform-noise #{SimpleCaptcha.noise}"
         end
         params << "jpeg:-"
 
-        SimpleCaptcha::Utils::run("convert", params.join(' '))
+        SimpleCaptcha::Utils::run("magick", params.join(' '))
       end
   end
 end
